@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Some Inspirational Quotes</title>
+    <meta name="description" content="Browse hand-picked inspirational quotes on beautiful backgrounds. Copy, share, and get a new quote with one click." />
+    <link rel="canonical" href="https://someinspirationalquotes.com/" />
+    <meta name="theme-color" content="#0b1220" />
+    <meta name="robots" content="index,follow" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://someinspirationalquotes.com/" />
+    <meta property="og:title" content="Some Inspirational Quotes" />
+    <meta property="og:description" content="Hand-picked inspirational quotes on beautiful backgrounds. Copy, share, and get a new quote with one click." />
+    <meta property="og:image" content="https://someinspirationalquotes.com/main_icon.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Some Inspirational Quotes" />
+    <meta name="twitter:description" content="Hand-picked inspirational quotes on beautiful backgrounds." />
+    <meta name="twitter:image" content="https://someinspirationalquotes.com/main_icon.png" />
+
+    <link rel="icon" href="/ico.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/ico.ico" type="image/x-icon">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet" />
+
+    <link rel="preload" as="image" href="/image/43.jpg">
+
+    <link rel="stylesheet" href="/quotesstyle.css" />
+    <script src="/quotesmov.js" defer></script>
+    <script src="/app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header" role="banner">
+    <div class="container">
+        <h1 class="site-title">Some Inspirational Quotes</h1>
+    </div>
+</header>
+
+<main id="main" class="hero" aria-label="Random inspirational quote" role="main">
+    <div class="hero__overlay" aria-hidden="true"></div>
+
+    <section class="quote-card" aria-live="polite" aria-atomic="true">
+        <blockquote class="quote" id="quoteBlock">
+            <p id="quoteText">Loading a great quote…</p>
+            <footer class="quote__footer">— <cite id="quoteAuthor">Someone</cite></footer>
+        </blockquote>
+
+        <div class="controls" role="group" aria-label="Quote actions">
+            <button id="btnNew" class="btn" type="button" aria-label="Get a new random quote">New Quote</button>
+            <button id="btnCopy" class="btn" type="button" aria-label="Copy quote to clipboard">Copy</button>
+            <button id="btnShare" class="btn" type="button" aria-label="Share quote">Share</button>
+        </div>
+
+        <p class="hint">
+            Tip: press <kbd>N</kbd> for a new quote.
+            <span class="sr-only">Press N key to get another quote.</span>
+        </p>
+    </section>
+</main>
+
+<footer class="site-footer" role="contentinfo">
+    <div class="container">
+        <p>
+            &copy; <span id="year"></span>
+            <a href="https://someinspirationalquotes.com">someinspirationalquotes.com</a>
+            · <a href="/about.html">About</a>
+            · <a href="/privacy.html">Privacy</a>
+        </p>
+    </div>
+</footer>
+
+<noscript>
+    <p style="text-align:center;color:#cbd7ff">Enable JavaScript to view random quotes.</p>
+</noscript>
+
+<script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Some Inspirational Quotes",
+        "url": "https://someinspirationalquotes.com/",
+        "description": "Hand-picked inspirational quotes on beautiful backgrounds.",
+        "creator": {
+            "@type": "Person",
+            "name": "Jill Platts"
+        },
+        "inLanguage": "en"
+    }
+</script>
+
+</body>
+</html>
+
+
