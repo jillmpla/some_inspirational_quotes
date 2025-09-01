@@ -1,6 +1,6 @@
 # Some Inspirational Quotes 🎇
 
-A lightweight web app that displays **random inspirational quotes** on **beautiful background images**.
+A lightweight, interactive web app for browsing and sharing a curation of inspirational quotes and beautiful backgrounds.
 
 ---
 
