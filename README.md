@@ -13,8 +13,7 @@ A lightweight web app that displays **random inspirational quotes** on **beautif
 - Random quotes, preloaded from `quotesmov.js`
 - Background images shuffle without repeats (until a cycle finishes)
 - Keyboard shortcut: press **N** for a new quote
-- One-click **Copy** and Web Share (**Share**) support
-- Tweet link generation (if a Tweet button is present)
+- One-click **Copy** and Web **Share** support
 - Responsive layout, good contrast, and accessible semantics
 
 ---
