@@ -65,7 +65,5 @@ A few built-in accessibility features:
 
 This project is licensed under the [MIT License](./LICENSE.txt).
 
-You are free to use, modify, and distribute this code for personal or commercial use. Attribution is appreciated.
-
 ## If you find this project useful, consider giving it a star! ⭐
 
