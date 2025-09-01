@@ -30,11 +30,10 @@ A lightweight, interactive web app for browsing and sharing a curation of inspir
     - Handles **Copy**, **Share**, **Tweet**, and the **N** key
 
 - **Images**  
-  Default pattern: `/image/0.jpg` … `/image/70.jpg`.  
-  Or define `window.images = ["image/hero1.jpg", "image/hero2.jpg", ...]` to use explicit paths.
+  Default pattern: `/image/0.jpg` … `/image/70.jpg`.
 
 - **Styles (`quotesstyle.css`)**  
-  Minimal, modern theme with a gradient header/footer and a glassy quote card. Mobile-friendly.
+  Minimal, modern design with a glassy quote card. Mobile-friendly.
 
 ---
 
@@ -45,7 +44,7 @@ The design focuses on simplicity and readability:
 - **Visual hierarchy:** Large serif quotes (Playfair Display) contrasted with sans-serif text (Inter) for headings and body.
 - **Glassmorphism:** The quote card floats above the background with subtle blur, border, and shadow.
 - **Backgrounds:** Fullscreen images cycle without repeats, dimmed with an overlay to preserve text legibility.
-- **Responsive design:** Scales smoothly from desktop to tablet or mobile with flexible typography and controls.
+- **Responsive:** Scales smoothly from desktop to tablet or mobile with flexible typography and controls.
 - **Interactions:** Buttons provide hover/active feedback, visible focus states, and subtle brightness changes.
 
 ---
