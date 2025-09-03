@@ -1,33 +1,38 @@
-//app.js - main quote/background logic
-(function () {
-    //cache DOM elements to interact with
-    const hero = document.querySelector('.hero, .intro') || document.body;
-    const quoteText = document.getElementById('quoteText');
-    const quoteAuthor = document.getElementById('quoteAuthor');
-    const btnNew = document.getElementById('btnNew');
-    const btnCopy = document.getElementById('btnCopy');
-    const btnShare = document.getElementById('btnShare');
-    const btnTweet = document.getElementById('btnTweet');
+//app.js - main logic
+//update const NUMBERED_IMAGE_COUNT   = 111; if you add more images
+//this was hardcoded for speed/performance!
 
-    //load quotes array (from quotesmov.js) and parse into objects
+(function () {
+    //cache DOM elements
+    const hero        = document.querySelector('.hero, .intro') || document.body;
+    const quoteText   = document.getElementById('quoteText');
+    const quoteAuthor = document.getElementById('quoteAuthor');
+    const btnNew      = document.getElementById('btnNew');
+    const btnCopy     = document.getElementById('btnCopy');
+    const btnShare    = document.getElementById('btnShare');
+
+    //parse the global quotes array into {text, author} objects
     const legacy = (window.quotes && Array.isArray(window.quotes)) ? window.quotes : [];
     const QUOTES = legacy.map((s) => {
-        //split into text + author based on "<br><br>"
-        const parts = String(s).split(/<br\s*\/?><br\s*\/?>(.*)/i);
-        const text = parts[0]?.replace(/<br\s*\/?>(?!<br)/gi, ' ').trim() || String(s).trim();
+        //split on the first "<br><br>" into text + author; strip leftover tags
+        const parts  = String(s).split(/<br\s*\/?><br\s*\/?>(.*)/i);
+        const text   = parts[0]?.replace(/<br\s*\/?>(?!<br)/gi, ' ').trim() || String(s).trim();
         const author = (parts[1] || '').replace(/<[^>]*>/g, '').trim() || 'Unknown';
         return { text, author };
     }).filter(q => q.text.length > 0);
 
-    const HAS_IMAGES_ARRAY = Array.isArray(window.images) && window.images.length > 0;
-    let IMAGE_COUNT = HAS_IMAGES_ARRAY ? window.images.length : 0;
+    //images: hardcoded numbered JPGs for speed
+    const HAS_IMAGES_ARRAY       = Array.isArray(window.images) && window.images.length > 0;
+    const NUMBERED_IMAGE_COUNT   = 111; //!!!!!!!!!!!!!!!UPDATE THIS IF YOU ADD MORE IMAGES TO THE image folder!!!!!!!!!!!!!!!
+    const TOTAL_IMAGE_COUNT      = HAS_IMAGES_ARRAY ? window.images.length : NUMBERED_IMAGE_COUNT;
 
+    //turn an index into a concrete URL
     const imagePath = (i) => HAS_IMAGES_ARRAY ? window.images[i] : `image/${i}.jpg`;
 
-    //quick preload helper
+    //tiny preload helper (warms the cache for the next background)
     function preload(src) { const img = new Image(); img.src = src; }
 
-    //returns a function that shuffles indices without repeats
+    //create a shuffler that returns each index once before repeating
     function makeShuffler(n) {
         let bag = Array.from({ length: n }, (_, i) => i);
         return function next() {
@@ -40,80 +45,50 @@
     }
 
     const nextQuoteIndex = makeShuffler(QUOTES.length || 1);
-    let nextImageIndex = HAS_IMAGES_ARRAY ? makeShuffler(IMAGE_COUNT) : null;
+    const nextImageIndex = makeShuffler(TOTAL_IMAGE_COUNT);
 
-    //cache successful src lookups, so don’t probe every time
-    const srcCache = new Map();
+    //set a background image (with decode() when available to reduce jank)
+    async function setBackground(i) {
+        const src = imagePath(i);
+        const img = new Image();
+        img.decoding = 'async';
+        img.src = src;
 
-    function setBackground(i, attempts = 0) {
-        //if explicit paths provided, use directly
-        if (HAS_IMAGES_ARRAY) {
-            const src = imagePath(i);
-            preload(src);
+        try { if ('decode' in img) await img.decode(); } catch {  }
+
+        if (img.complete && img.naturalWidth > 0) {
             hero.style.backgroundImage = `url('${src}')`;
-            preload(imagePath(nextImageIndex())); //preload next
-            return;
+        } else {
+            img.onload = () => { hero.style.backgroundImage = `url('${src}')`; };
         }
 
-        if (srcCache.has(i)) {
-            const cached = srcCache.get(i);
-            preload(cached);
-            hero.style.backgroundImage = `url('${cached}')`;
-            return;
-        }
-
-        //try common extensions until one succeeds
-        const exts = ['jpg', 'jpeg', 'JPG', 'JPEG', 'png', 'PNG'];
-        let applied = false;
-        let pending = exts.length;
-
-        for (const ext of exts) {
-            const src = `image/${i}.${ext}`;
-            const img = new Image();
-            img.onload = () => {
-                if (applied) return;
-                applied = true;
-                srcCache.set(i, src);
-                hero.style.backgroundImage = `url('${src}')`;
-                //only preload next if we already have a nextImageIndex (after detection)
-                if (nextImageIndex) preload(imagePath(nextImageIndex())); //preload upcoming
-            };
-            img.onerror = () => {
-                pending--;
-                if (pending === 0 && !applied && attempts < 5 && nextImageIndex) {
-                    //try again with a different index if all failed
-                    setBackground(nextImageIndex(), attempts + 1);
-                }
-            };
-            img.src = src;
-        }
+        const j = nextImageIndex();
+        preload(imagePath(j));
     }
 
-    //insert text/author into the page and update tweet/share buttons
+    //render quote text/author and keep the share button in sync
     function renderQuote(q) {
         quoteText.textContent = q.text;
         quoteAuthor.textContent = q.author;
 
-        const tweet = `https://twitter.com/intent/tweet?text=${encodeURIComponent('“' + q.text + '” — ' + q.author)}`;
-        if (btnTweet) btnTweet.href = tweet;
         if (btnShare) btnShare.disabled = !navigator.share;
     }
 
-    //main action: show a new quote + background
-    let cooldown = false; //short lockout to prevent spam clicks
+    //show a new quote + swap background
+    let cooldown = false;
     function newQuote() {
         if (!QUOTES.length || cooldown) return;
-        //don’t attempt background if fallback count not ready yet
-        if (!HAS_IMAGES_ARRAY && !nextImageIndex) return;
 
         cooldown = true;
         renderQuote(QUOTES[nextQuoteIndex()]);
         setBackground(nextImageIndex());
-        btnNew && btnNew.focus({ preventScroll: true });
+
+        if (btnNew) btnNew.focus({ preventScroll: true });
+
         setTimeout(() => { cooldown = false; }, 250);
     }
 
-    //copy current quote to clipboard
+    //copy the current quote to the clipboard
     async function copyQuote() {
         const text = `"${quoteText.textContent}" — ${quoteAuthor.textContent}`;
         try {
@@ -124,33 +99,30 @@
         }
     }
 
-    //use Web Share API if available
+    //share using the Web Share API
     async function shareQuote() {
         if (!navigator.share) return;
         const text = `"${quoteText.textContent}" — ${quoteAuthor.textContent}`;
         try {
             await navigator.share({ text });
-        } catch {}
+        } catch {
+        }
     }
 
-    //temporarily change button label to confirm action
+    //quick button feedback helper
     function flash(el, msg) {
         if (!el) return;
         const prev = el.textContent;
         el.textContent = msg;
         el.disabled = true;
-        setTimeout(() => {
-            el.textContent = prev;
-            el.disabled = false;
-        }, 900);
+        setTimeout(() => { el.textContent = prev; el.disabled = false; }, 900);
     }
 
-    //buttons/events
-    btnNew && btnNew.addEventListener("click", newQuote);
-    btnCopy && btnCopy.addEventListener("click", copyQuote);
-    btnShare && btnShare.addEventListener("click", shareQuote);
+    if (btnNew)   btnNew.addEventListener("click", newQuote);
+    if (btnCopy)  btnCopy.addEventListener("click", copyQuote);
+    if (btnShare) btnShare.addEventListener("click", shareQuote);
 
-    //keyboard shortcut: "N" for new quote
+    //keyboard shortcut: press "N" for a new quote
     window.addEventListener("keydown", (e) => {
         if (e.key && e.key.toLowerCase() === "n") {
             e.preventDefault();
@@ -158,55 +130,10 @@
         }
     });
 
-    //test if a numbered image exists for any supported extension
-    function probeIndexExists(i) {
-        return new Promise((resolve) => {
-            const exts = ['jpg', 'jpeg', 'JPG', 'JPEG', 'png', 'PNG'];
-            let remaining = exts.length;
-            let done = false;
-
-            for (const ext of exts) {
-                const test = new Image();
-                test.onload = () => {
-                    if (done) return;
-                    done = true;
-                    resolve(true);
-                };
-                test.onerror = () => {
-                    remaining--;
-                    if (!done && remaining === 0) resolve(false);
-                };
-                test.src = `image/${i}.${ext}`;
-            }
-        });
-    }
-
-    //sequentially detect how many numbered images exist
-    async function detectImageCount(maxGuess = 1000) {
-        let i = 0;
-        for (; i < maxGuess; i++) {
-            //stop at the first index that doesn't exist
-            const exists = await probeIndexExists(i);
-            if (!exists) break;
-        }
-        return i; //count is the first missing index
-    }
-
-    //initial render
+    //initial render: show quote and background immediately
     if (QUOTES.length) {
         renderQuote(QUOTES[nextQuoteIndex()]);
-        if (HAS_IMAGES_ARRAY) {
-            setBackground(nextImageIndex());
-        } else {
-            //auto-detect IMAGE_COUNT for fallback numbered files, then start shuffler & background
-            (async () => {
-                IMAGE_COUNT = await detectImageCount();
-                if (IMAGE_COUNT > 0) {
-                    nextImageIndex = makeShuffler(IMAGE_COUNT);
-                    setBackground(nextImageIndex());
-                }
-            })();
-        }
+        setBackground(nextImageIndex());
     } else {
         renderQuote({
             text: "Add your quotes array to window.quotes to get started.",
@@ -214,5 +141,6 @@
         });
     }
 })();
+
 
 
