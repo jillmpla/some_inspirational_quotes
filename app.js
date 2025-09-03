@@ -19,9 +19,8 @@
         return { text, author };
     }).filter(q => q.text.length > 0);
 
-    //images: use explicit window.images[] if provided, else fallback
     const HAS_IMAGES_ARRAY = Array.isArray(window.images) && window.images.length > 0;
-    const IMAGE_COUNT = HAS_IMAGES_ARRAY ? window.images.length : 71;
+    let IMAGE_COUNT = HAS_IMAGES_ARRAY ? window.images.length : 0;
 
     const imagePath = (i) => HAS_IMAGES_ARRAY ? window.images[i] : `image/${i}.jpg`;
 
@@ -41,7 +40,7 @@
     }
 
     const nextQuoteIndex = makeShuffler(QUOTES.length || 1);
-    const nextImageIndex = makeShuffler(IMAGE_COUNT);
+    let nextImageIndex = HAS_IMAGES_ARRAY ? makeShuffler(IMAGE_COUNT) : null;
 
     //cache successful src lookups, so don’t probe every time
     const srcCache = new Map();
@@ -76,11 +75,12 @@
                 applied = true;
                 srcCache.set(i, src);
                 hero.style.backgroundImage = `url('${src}')`;
-                preload(imagePath(nextImageIndex())); //preload upcoming
+                //only preload next if we already have a nextImageIndex (after detection)
+                if (nextImageIndex) preload(imagePath(nextImageIndex())); //preload upcoming
             };
             img.onerror = () => {
                 pending--;
-                if (pending === 0 && !applied && attempts < 5) {
+                if (pending === 0 && !applied && attempts < 5 && nextImageIndex) {
                     //try again with a different index if all failed
                     setBackground(nextImageIndex(), attempts + 1);
                 }
@@ -99,10 +99,13 @@
         if (btnShare) btnShare.disabled = !navigator.share;
     }
 
-    //main action: show a new quote + background ---
+    //main action: show a new quote + background
     let cooldown = false; //short lockout to prevent spam clicks
     function newQuote() {
         if (!QUOTES.length || cooldown) return;
+        //don’t attempt background if fallback count not ready yet
+        if (!HAS_IMAGES_ARRAY && !nextImageIndex) return;
+
         cooldown = true;
         renderQuote(QUOTES[nextQuoteIndex()]);
         setBackground(nextImageIndex());
@@ -155,10 +158,55 @@
         }
     });
 
+    //test if a numbered image exists for any supported extension
+    function probeIndexExists(i) {
+        return new Promise((resolve) => {
+            const exts = ['jpg', 'jpeg', 'JPG', 'JPEG', 'png', 'PNG'];
+            let remaining = exts.length;
+            let done = false;
+
+            for (const ext of exts) {
+                const test = new Image();
+                test.onload = () => {
+                    if (done) return;
+                    done = true;
+                    resolve(true);
+                };
+                test.onerror = () => {
+                    remaining--;
+                    if (!done && remaining === 0) resolve(false);
+                };
+                test.src = `image/${i}.${ext}`;
+            }
+        });
+    }
+
+    //sequentially detect how many numbered images exist
+    async function detectImageCount(maxGuess = 1000) {
+        let i = 0;
+        for (; i < maxGuess; i++) {
+            //stop at the first index that doesn't exist
+            const exists = await probeIndexExists(i);
+            if (!exists) break;
+        }
+        return i; //count is the first missing index
+    }
+
     //initial render
     if (QUOTES.length) {
         renderQuote(QUOTES[nextQuoteIndex()]);
-        setBackground(nextImageIndex());
+        if (HAS_IMAGES_ARRAY) {
+            setBackground(nextImageIndex());
+        } else {
+            //auto-detect IMAGE_COUNT for fallback numbered files, then start shuffler & background
+            (async () => {
+                IMAGE_COUNT = await detectImageCount();
+                if (IMAGE_COUNT > 0) {
+                    nextImageIndex = makeShuffler(IMAGE_COUNT);
+                    setBackground(nextImageIndex());
+                }
+            })();
+        }
     } else {
         renderQuote({
             text: "Add your quotes array to window.quotes to get started.",
@@ -166,4 +214,5 @@
         });
     }
 })();
+
 
