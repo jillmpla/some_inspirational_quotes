@@ -23,7 +23,7 @@
 
     //images: hardcoded numbered JPGs for speed
     const HAS_IMAGES_ARRAY       = Array.isArray(window.images) && window.images.length > 0;
-    const NUMBERED_IMAGE_COUNT   = 111; //!!!!!!!!!!!!!!!UPDATE THIS IF YOU ADD MORE IMAGES TO THE image folder!!!!!!!!!!!!!!!
+    const NUMBERED_IMAGE_COUNT   = 218; //!!!!!!!!!!!!!!UPDATE THIS IF YOU ADD MORE IMAGES TO THE image folder!!!!!!!!!!!!!!
     const TOTAL_IMAGE_COUNT      = HAS_IMAGES_ARRAY ? window.images.length : NUMBERED_IMAGE_COUNT;
 
     //turn an index into a concrete URL
