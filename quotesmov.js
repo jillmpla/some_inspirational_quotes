@@ -191,6 +191,7 @@ window.quotes = [
     'Act as though it were impossible to fail.<br><br>Dorothea Brande',
     'It is not the mountain we conquer, but ourselves.<br><br>Sir Edmund Hillary',
     'Energy and persistence conquer all things.<br><br>Benjamin Franklin',
+    'Happiness equals reality minus expectations.<br><br>Tom Magliozzi',
     'A champion is defined not by their wins but by how they can recover when they fall.<br><br>Serena Williams',
     'He who has a why to live can bear almost any how.<br><br>Friedrich Nietzsche',
     'When I let go of what I am, I become what I might be.<br><br>Lao Tzu',
