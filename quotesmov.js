@@ -44,7 +44,6 @@ window.quotes = [
     'There are better starters than me, but I\'m a strong finisher.<br><br>Usain Bolt',
     'He who believes is strong. He who doubts is weak. Strong convictions precede great actions.<br><br>Louisa May Alcott',
     'Strength and growth come only through continuous effort and struggle.<br><br>Napoleon Hill',
-    'Make up your mind that no matter what comes your way—no matter how difficult, no matter how unfair—you will do more than simply survive. You will thrive in spite of it.<br><br>Joel Osteen',
     'Tough times never last, but tough people do.<br><br>Robert H. Schuller',
     'I believe that tomorrow is another day.<br><br>Audrey Hepburn',
     'That which does not kill us makes us stronger.<br><br>Friedrich Nietzsche',
@@ -66,7 +65,7 @@ window.quotes = [
     'The journey of a thousand miles begins with one step.<br><br>Lao Tzu',
     'What you do speaks so loudly that I cannot hear what you say.<br><br>Ralph Waldo Emerson',
     'The best way out is always through.<br><br>Robert Frost',
-    'Keep your face to the sunshine, and you will never see the shadows.<br><br>Helen Keller',
+    'Keep your face to the sunshine and you will never see the shadows.<br><br>Helen Keller',
     'The best dreams happen when you\'re awake.<br><br>Cherie Gilderbloom',
     'The difference between ordinary and extraordinary is that little extra.<br><br>Jimmy Johnson',
     'You must not only aim right, but draw the bow with all your might.<br><br>Henry David Thoreau',
@@ -188,7 +187,7 @@ window.quotes = [
     'Hope is the thing with feathers that perches in the soul, and sings the tune without the words, and never stops at all.<br><br>Emily Dickinson',
     'First say to yourself what you would be; and then do what you have to do.<br><br>Epictetus',
     'Light tomorrow with today.<br><br>Elizabeth Barrett Browning',
-    'We are what we repeatedly do. Excellence, then, is not an act but a habit.<br><br>Will Durant (summarizing Aristotle)',
+    'We are what we repeatedly do. Excellence, then, is not an act but a habit.<br><br>Will Durant (Aristotle)',
     'Act as though it were impossible to fail.<br><br>Dorothea Brande',
     'It is not the mountain we conquer, but ourselves.<br><br>Sir Edmund Hillary',
     'Energy and persistence conquer all things.<br><br>Benjamin Franklin',
@@ -217,5 +216,7 @@ window.quotes = [
     'If nothing we do matters, then all that matters is what we do.<br><br>Angel (Angel)',
     'Heroes don\'t accept the world the way it is. They fight it.<br><br>Angel (Angel)',
     'Magic isn\'t just spells and potions. It\'s about believing in yourself.<br><br>Phoebe Halliwell (Charmed)',
-    'Being normal is vastly overrated.<br><br>Piper Halliwell (Charmed)'
+    'Being normal is vastly overrated.<br><br>Piper Halliwell (Charmed)',
+    'All we have to decide is what to do with the time that is given us.<br><br>Gandalf (The Fellowship of the Ring)',
+    'Even the smallest person can change the course of the future.<br><br>Galadriel (The Fellowship of the Ring)'
 ];
